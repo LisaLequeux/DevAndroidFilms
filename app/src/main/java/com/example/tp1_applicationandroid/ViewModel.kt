@@ -1,10 +1,10 @@
 package com.example.tp1_applicationandroid
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.Language
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
     val api = retrofit.create(Api::class.java)
     val movies = MutableStateFlow<List<Movie>>(listOf())
     val series = MutableStateFlow<List<Series>>(listOf())
-    val acteurs = MutableStateFlow<List<Acteurs>>(listOf())
+    val actors = MutableStateFlow<List<Actors>>(listOf())
 
     fun getMovies(){
         viewModelScope.launch {
@@ -32,9 +32,15 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getActeurs(){
+    fun getActors(){
         viewModelScope.launch{
-            acteurs.value = api.acteursweek(api_key).results
+            actors.value = api.actorsweek(api_key).results
+        }
+    }
+
+    fun searchMovie(){
+        viewModelScope.launch{
+            movies.value = api.searchMovie(api_key).results
         }
     }
 }

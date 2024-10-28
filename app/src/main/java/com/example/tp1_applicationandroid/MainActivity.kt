@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.displayCutoutPadding
@@ -52,78 +51,90 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
+            val isProfilDestination =currentDestination?.hasRoute<ProfilDestination>() == true
             TP1ApplicationAndroidTheme {
                 Scaffold(
                     topBar = {
-                        Surface(
-                            color = Color.LightGray)
-                        {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(15.dp)
-                            ) {
-                                TextButton(
-                                    onClick = { navController.navigate(ProfilDestination()) },
-                                    colors = ButtonDefaults.textButtonColors(Color.DarkGray)
+                        if (!isProfilDestination) {
+                            Surface(
+                                color = Color.LightGray
+                            )
+                            {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(15.dp)
                                 ) {
-                                    Text("Profil", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Color.LightGray)
+                                    TextButton(
+                                        onClick = { navController.navigate(ProfilDestination()) },
+                                        colors = ButtonDefaults.textButtonColors(Color.DarkGray)
+                                    ) {
+                                        Text(
+                                            "Profil",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 15.sp,
+                                            color = Color.LightGray
+                                        )
+                                    }
+                                    Icon(
+                                        painter = painterResource(R.drawable.baseline_search_24),
+                                        contentDescription = "recherche",
+                                        modifier = Modifier.size(30.dp),
+                                    )
                                 }
-                                Image(
-                                    painter = painterResource(R.drawable.baseline_search_24),
-                                    contentDescription = "recherche",
-                                    modifier = Modifier.size(30.dp)
-                                    //onClick = {searchMovie()}
-                                )
                             }
                         }
                     },
+
                     bottomBar = {
-                        Surface(
-                            color = Color.LightGray)
-                        {
-                            NavigationBar(
-                                containerColor = Color.LightGray,
-                                modifier = Modifier.displayCutoutPadding()//.clip(RoundedCornerShape(20.dp)),
-                            ) {
-                                NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.baseline_movie_24),
-                                            contentDescription = "films",
-                                            Modifier.size(20.dp),
-                                            tint = Color.DarkGray
-                                        )
-                                    },
-                                    label = { Text("Films") },
-                                    selected = currentDestination?.hasRoute<FilmsDestination>() == true,
-                                    onClick = { navController.navigate(FilmsDestination()) })
-                                NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.baseline_tv_24),
-                                            contentDescription = "series",
-                                            Modifier.size(20.dp),
-                                            tint = Color.DarkGray
-                                        )
-                                    },
-                                    label = { Text("Séries") },
-                                    selected = currentDestination?.hasRoute<SeriesDestination>() == true,
-                                    onClick = { navController.navigate(SeriesDestination()) })
-                                NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.baseline_person_24),
-                                            contentDescription = "acteurs",
-                                            Modifier.size(20.dp),
-                                            tint = Color.DarkGray
-                                        )
-                                    },
-                                    label = { Text("Acteurs") },
-                                    selected = currentDestination?.hasRoute<ActeursDestination>() == true,
-                                    onClick = { navController.navigate(ActeursDestination()) })
+                        if(!isProfilDestination) {
+                            Surface(
+                                color = Color.LightGray
+                            )
+                            {
+                                NavigationBar(
+                                    containerColor = Color.LightGray,
+                                    modifier = Modifier.displayCutoutPadding()//.clip(RoundedCornerShape(20.dp)),
+                                ) {
+                                    NavigationBarItem(
+                                        icon = {
+                                            Icon(
+                                                painter = painterResource(R.drawable.baseline_movie_24),
+                                                contentDescription = "films",
+                                                Modifier.size(20.dp),
+                                                tint = Color.DarkGray
+                                            )
+                                        },
+                                        label = { Text("Films") },
+                                        selected = currentDestination?.hasRoute<FilmsDestination>() == true,
+                                        onClick = { navController.navigate(FilmsDestination()) })
+                                    NavigationBarItem(
+                                        icon = {
+                                            Icon(
+                                                painter = painterResource(R.drawable.baseline_tv_24),
+                                                contentDescription = "series",
+                                                Modifier.size(20.dp),
+                                                tint = Color.DarkGray
+                                            )
+                                        },
+                                        label = { Text("Séries") },
+                                        selected = currentDestination?.hasRoute<SeriesDestination>() == true,
+                                        onClick = { navController.navigate(SeriesDestination()) })
+                                    NavigationBarItem(
+                                        icon = {
+                                            Icon(
+                                                painter = painterResource(R.drawable.baseline_person_24),
+                                                contentDescription = "acteurs",
+                                                Modifier.size(20.dp),
+                                                tint = Color.DarkGray
+                                            )
+                                        },
+                                        label = { Text("Acteurs") },
+                                        selected = currentDestination?.hasRoute<ActeursDestination>() == true,
+                                        onClick = { navController.navigate(ActeursDestination()) })
+                                }
                             }
                         }
                     }
@@ -131,7 +142,7 @@ class MainActivity : ComponentActivity() {
                 { innerPadding ->
                     NavHost(navController, startDestination = ProfilDestination(),
                         Modifier.padding(innerPadding)) {
-                        composable<ProfilDestination> { ProfilHome() }
+                        composable<ProfilDestination> { ProfilHome(navController) }
                         composable<FilmsDestination> { Films(viewmodel) }
                         composable<SeriesDestination> { Series(viewmodel) }
                         composable<ActeursDestination> { Acteurs(viewmodel) }

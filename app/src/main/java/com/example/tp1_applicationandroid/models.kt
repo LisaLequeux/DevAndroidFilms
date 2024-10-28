@@ -50,12 +50,12 @@ data class Series(
 
 data class TmdbActeursResult(
     val page: Int,
-    val results: List<Acteurs>,
+    val results: List<Actors>,
     val total_pages: Int,
     val total_results: Int
 )
 
-data class Acteurs(
+data class Actors(
     val adult: Boolean,
     val gender: Int,
     val id: Int,

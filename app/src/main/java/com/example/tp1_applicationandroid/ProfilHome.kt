@@ -1,9 +1,5 @@
 package com.example.tp1_applicationandroid
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,10 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -33,11 +26,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.example.tp1_applicationandroid.ui.theme.TP1ApplicationAndroidTheme
 
 @Composable
-fun ProfilHome () {
+fun ProfilHome(navController: NavHostController) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     when (windowSizeClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> {
@@ -59,7 +53,7 @@ fun ProfilHome () {
                                 Contact(
                                     name = "Android",
                                 )
-                                BtnDemarrer()
+                                BtnDemarrer(navController = navController)
                             }
                         }
 
@@ -89,7 +83,7 @@ fun ProfilHome () {
                                     Contact(
                                         name = "Android"
                                     )
-                                    BtnDemarrer()
+                                    BtnDemarrer(navController = navController)
                                 }
                             }
                         }
@@ -155,8 +149,10 @@ fun ProfilHome () {
         }
 
         @Composable
-        fun BtnDemarrer() {
-            Button(onClick = { /*navController.navigate(FilmsDestination())*/ }) {
+        fun BtnDemarrer(navController: NavController) {
+            Button(
+                onClick = { navController.navigate(FilmsDestination()) }
+            ) {
                 Text(text = "Démarrer")
             }
         }

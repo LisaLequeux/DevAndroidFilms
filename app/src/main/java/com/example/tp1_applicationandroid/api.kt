@@ -17,7 +17,7 @@ interface Api {
     ): TmdbSeriesResult
 
     @GET("trending/person/week")
-    suspend fun acteursweek(
+    suspend fun actorsweek(
         @Query("api_key")api_key: String,
         @Query("language") language: String = "fr"
     ): TmdbActeursResult

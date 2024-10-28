@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 
 @Composable
@@ -30,44 +32,91 @@ fun Series (viewModel: MainViewModel) {
 
     //La fonction collectAsStateWithLifecycle permet de sortir de l'état provisoir
     val series by viewModel.series.collectAsStateWithLifecycle()
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier.padding(5.dp)
-    ) {
-        items(series.size) { index ->
-            val serie = series[index]
-            Card(
-                modifier = Modifier.padding(5.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.LightGray
-                ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 8.dp,
-                    pressedElevation = 12.dp,
-                )
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    when (windowSizeClass.windowWidthSizeClass) {
+        WindowWidthSizeClass.COMPACT -> {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.padding(5.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(5.dp),
-                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
-                ) {
-                    AsyncImage(
-                        model = "https://image.tmdb.org/t/p/w500/${serie.poster_path}",
-                        contentDescription = "poster",
-                        contentScale = ContentScale.Crop
-                    )
-                    Text(
-                        serie.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        serie.first_air_date,
-                        fontStyle = FontStyle.Italic,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center
-                    )
+                items(series.size) { index ->
+                    val serie = series[index]
+                    Card(
+                        modifier = Modifier.padding(5.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray
+                        ),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 8.dp,
+                            pressedElevation = 12.dp,
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(5.dp),
+                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                        ) {
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w500/${serie.poster_path}",
+                                contentDescription = "poster",
+                                contentScale = ContentScale.Crop
+                            )
+                            Text(
+                                serie.name,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                serie.first_air_date,
+                                fontStyle = FontStyle.Italic,
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        else -> {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(4),
+                modifier = Modifier.padding(10.dp)
+            ) {
+                items(series.size) { index ->
+                    val serie = series[index]
+                    Card(
+                        modifier = Modifier.padding(10.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray
+                        ),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 8.dp,
+                            pressedElevation = 12.dp,
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(5.dp),
+                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                        ) {
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w500/${serie.poster_path}",
+                                contentDescription = "poster",
+                                contentScale = ContentScale.Crop
+                            )
+                            Text(
+                                serie.name,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                serie.first_air_date,
+                                fontStyle = FontStyle.Italic,
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             }
         }
