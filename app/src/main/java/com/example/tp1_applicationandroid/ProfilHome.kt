@@ -142,7 +142,7 @@ fun ProfilHome(navController: NavHostController) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .clip(CircleShape)
-                        .size(250.dp)
+                        .size(200.dp)
                         .border(BorderStroke(5.dp, Color.DarkGray), CircleShape)
                 )
             }

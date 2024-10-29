@@ -19,6 +19,7 @@ class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<Movie>>(listOf())
     val series = MutableStateFlow<List<Series>>(listOf())
     val actors = MutableStateFlow<List<Actors>>(listOf())
+    //val searchMovies = MutableStateFlow<List<Movie>>(listOf())
 
     fun getMovies(){
         viewModelScope.launch {
@@ -40,7 +41,11 @@ class MainViewModel : ViewModel() {
 
     fun searchMovie(){
         viewModelScope.launch{
-            movies.value = api.searchMovie(api_key).results
+            try {
+                movies.value = api.searchMovie(api_key).results
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "searchMovie: $e")
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.displayCutoutPadding
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -40,6 +42,7 @@ import androidx.navigation.compose.composable
 @Serializable class FilmsDestination
 @Serializable class SeriesDestination
 @Serializable class ActeursDestination
+@Serializable class SearchDestination
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("RestrictedApi")
@@ -81,7 +84,10 @@ class MainActivity : ComponentActivity() {
                                     Icon(
                                         painter = painterResource(R.drawable.baseline_search_24),
                                         contentDescription = "recherche",
-                                        modifier = Modifier.size(30.dp),
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .clickable { navController.navigate(SearchDestination()) },
+                                        tint = Color.DarkGray
                                     )
                                 }
                             }
@@ -146,6 +152,7 @@ class MainActivity : ComponentActivity() {
                         composable<FilmsDestination> { Films(viewmodel) }
                         composable<SeriesDestination> { Series(viewmodel) }
                         composable<ActeursDestination> { Acteurs(viewmodel) }
+                        composable<SearchDestination> { Search(viewmodel) }
                     }
                 }
             }
