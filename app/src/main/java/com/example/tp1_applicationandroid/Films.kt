@@ -1,5 +1,6 @@
 package com.example.tp1_applicationandroid
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -20,11 +21,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 
 @Composable
-fun Films (viewModel: MainViewModel) {
+fun Films (viewModel: MainViewModel, navController: NavHostController) {
     //Cette fonction permet de récupérer et de tout actualiser au démarrage de l'application
     LaunchedEffect(Unit) {
         viewModel.getMovies()
@@ -41,7 +43,9 @@ fun Films (viewModel: MainViewModel) {
                 items(movies.size) { index ->
                     val movie = movies[index]
                     Card(
-                        modifier = Modifier.padding(10.dp),
+                        modifier = Modifier.padding(10.dp).clickable {
+                            navController.navigate("FilmDetails/${movie.id}")
+                        },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.LightGray
                         ),
@@ -52,7 +56,7 @@ fun Films (viewModel: MainViewModel) {
                     ) {
                         Column(
                             modifier = Modifier.padding(5.dp),
-                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
@@ -96,7 +100,7 @@ fun Films (viewModel: MainViewModel) {
                     ) {
                         Column(
                             modifier = Modifier.padding(5.dp),
-                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",

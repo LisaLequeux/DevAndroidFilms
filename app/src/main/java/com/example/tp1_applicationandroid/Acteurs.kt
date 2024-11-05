@@ -92,6 +92,7 @@ fun Acteurs(viewModel: MainViewModel){
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500/${acteur.profile_path}",
                                 contentDescription = "poster",
+                                //placeholder = /*mettre une image par défaut*/
                             )
                             Text(acteur.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                             Text(

@@ -44,15 +44,9 @@ fun ProfilHome(navController: NavHostController) {
                                 verticalArrangement = Arrangement.Center
 
                             ) {
-                                Photo(
-                                    name = "Android",
-                                )
-                                Identite(
-                                    name = "Android",
-                                )
-                                Contact(
-                                    name = "Android",
-                                )
+                                Photo()
+                                Identite()
+                                Contact()
                                 BtnDemarrer(navController = navController)
                             }
                         }
@@ -70,19 +64,13 @@ fun ProfilHome(navController: NavHostController) {
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
-                                    Photo(
-                                        name = "Android"
-                                    )
-                                    Identite(
-                                        name = "Android"
-                                    )
+                                    Photo()
+                                    Identite()
                                 }
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Contact(
-                                        name = "Android"
-                                    )
+                                    Contact()
                                     BtnDemarrer(navController = navController)
                                 }
                             }
@@ -92,7 +80,7 @@ fun ProfilHome(navController: NavHostController) {
 
 
         @Composable
-        fun Identite(name: String, modifier: Modifier = Modifier) {
+        fun Identite(modifier: Modifier = Modifier) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = modifier.padding(20.dp)
@@ -104,13 +92,13 @@ fun ProfilHome(navController: NavHostController) {
         }
 
         @Composable
-        fun Contact(name: String, modifier: Modifier = Modifier) {
+        fun Contact(modifier: Modifier = Modifier) {
             Card {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier.padding(20.dp)
                 ) {
-                    Row() {
+                    Row {
                         Column {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_alternate_email_24),
@@ -132,7 +120,7 @@ fun ProfilHome(navController: NavHostController) {
         }
 
         @Composable
-        fun Photo(name: String, modifier: Modifier = Modifier) {
+        fun Photo() {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

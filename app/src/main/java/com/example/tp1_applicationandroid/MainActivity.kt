@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -95,7 +94,7 @@ class MainActivity : ComponentActivity() {
                     },
 
                     bottomBar = {
-                        if(!isProfilDestination) {
+                       if(!isProfilDestination) {
                             Surface(
                                 color = Color.LightGray
                             )
@@ -142,18 +141,25 @@ class MainActivity : ComponentActivity() {
                                         onClick = { navController.navigate(ActeursDestination()) })
                                 }
                             }
-                        }
+                       }
                     }
                 )
                 { innerPadding ->
                     NavHost(navController, startDestination = ProfilDestination(),
                         Modifier.padding(innerPadding)) {
                         composable<ProfilDestination> { ProfilHome(navController) }
-                        composable<FilmsDestination> { Films(viewmodel) }
-                        composable<SeriesDestination> { Series(viewmodel) }
+                        composable<FilmsDestination> { Films(viewmodel, navController) }
+                        composable<SeriesDestination> { Series(viewmodel, navController) }
                         composable<ActeursDestination> { Acteurs(viewmodel) }
                         composable<SearchDestination> { Search(viewmodel) }
+                        composable("FilmDetails/{filmId}") { backStackEntry ->
+                            val filmId = backStackEntry.arguments?.getString("filmId") ?: return@composable
+                            FilmDetails(viewmodel, filmId/*, navController*/) }
+                        composable("SerieDetails/{serieId}") { backStackEntry ->
+                            val serieId = backStackEntry.arguments?.getString("serieId") ?: return@composable
+                            SerieDetails(viewmodel, serieId/*, navController*/) }
                     }
+
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.tp1_applicationandroid
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -20,11 +21,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 
 @Composable
-fun Series (viewModel: MainViewModel) {
+fun Series (viewModel: MainViewModel, navController: NavController) {
     //Cette fonction permet de récupérer et de tout actualiser au démarrage de l'application
     LaunchedEffect(Unit) {
         viewModel.getSeries()
@@ -42,7 +44,9 @@ fun Series (viewModel: MainViewModel) {
                 items(series.size) { index ->
                     val serie = series[index]
                     Card(
-                        modifier = Modifier.padding(5.dp),
+                        modifier = Modifier.padding(5.dp).clickable {
+                            navController.navigate("serieDetails/${serie.id}")
+                        },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.LightGray
                         ),

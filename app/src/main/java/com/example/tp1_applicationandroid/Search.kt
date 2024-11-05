@@ -1,10 +1,8 @@
 package com.example.tp1_applicationandroid
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -29,7 +27,7 @@ import coil.compose.AsyncImage
 @Composable
 fun Search (viewModel: MainViewModel) {
     LaunchedEffect(Unit) {
-        viewModel.searchMovie()
+        viewModel.searchMovies()
     }
 
     Column (
@@ -39,61 +37,58 @@ fun Search (viewModel: MainViewModel) {
             .fillMaxSize()
             .padding(5.dp),
     ) {
-        Presentation(
-            name = "Android",
-        )
-        RappelRecherche(
-            name = "Android",
-        )
+        Presentation()
+
+        RappelRecherche()
+
         Column {
             CadreFilms(
-                name = "Android",
                 modifier = Modifier.align(Alignment.Start)
             )
-            //Afficher une LazyHorizontalGrid avec les resultats de films recherchés
-            val searchMovies by viewModel.movies.collectAsStateWithLifecycle()
+                //Afficher une LazyHorizontalGrid avec les resultats de films recherchés
+                val searchMovies by viewModel.movies.collectAsStateWithLifecycle()
 
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(1),
-                modifier = Modifier.padding(5.dp).fillMaxWidth()
-            ) {
-                items(searchMovies.size) { index ->
-                    val searchMovie = searchMovies[index]
-                    Card(
-                        modifier = Modifier.padding(5.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray
-                        ),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 8.dp,
-                            pressedElevation = 12.dp,
-                        )
-                    ) {
-                        Column(
+                LazyHorizontalGrid(
+                    rows = GridCells.Fixed(1),
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    items(searchMovies.size) { index ->
+                        val searchMovie = searchMovies[index]
+                        Card(
                             modifier = Modifier.padding(5.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.LightGray
+                            ),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 8.dp,
+                                pressedElevation = 12.dp,
+                            )
                         ) {
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w500/${searchMovie.poster_path}",
-                                contentDescription = "poster",
-                                contentScale = ContentScale.Crop
-                            )
-                            Text(
-                                searchMovie.title,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                searchMovie.release_date,
-                                fontStyle = FontStyle.Italic,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center
-                            )
+                            Column(
+                                modifier = Modifier.padding(5.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                AsyncImage(
+                                    model = "https://image.tmdb.org/t/p/w500/${searchMovie.poster_path}",
+                                    contentDescription = "poster",
+                                    contentScale = ContentScale.Crop
+                                )
+                                Text(
+                                    searchMovie.title,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    searchMovie.release_date,
+                                    fontStyle = FontStyle.Italic,
+                                    fontSize = 16.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
-            }
         }
 
         //Afficher une LazyHorizontalGrid avec les resultats de séries recherchées
@@ -103,7 +98,7 @@ fun Search (viewModel: MainViewModel) {
 }
 
 @Composable
-fun Presentation (name: String, modifier: Modifier = Modifier){
+fun Presentation (modifier: Modifier = Modifier){
     Column (
         modifier = modifier.padding(5.dp)
     ){
@@ -117,7 +112,7 @@ fun Presentation (name: String, modifier: Modifier = Modifier){
 }
 
 @Composable
-fun CadreFilms (name: String, modifier: Modifier = Modifier){
+fun CadreFilms (modifier: Modifier = Modifier){
     Column (
         modifier = modifier.padding(5.dp)
     ){
@@ -131,7 +126,7 @@ fun CadreFilms (name: String, modifier: Modifier = Modifier){
 }
 
 @Composable
-fun RappelRecherche (name: String, modifier: Modifier = Modifier){
+fun RappelRecherche (modifier: Modifier = Modifier){
     Column (
         modifier = modifier.padding(5.dp)
     ){
