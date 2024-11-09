@@ -1,6 +1,7 @@
 package com.example.tp1_applicationandroid
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squareup.moshi.Moshi
@@ -31,7 +32,9 @@ class MainViewModel : ViewModel() {
     val movies: StateFlow<List<Movie>> = _movies
     val series = MutableStateFlow<List<Series>>(listOf())
     val actors = MutableStateFlow<List<Actors>>(listOf())
-    val searchMovies = MutableStateFlow<List<Search>>(listOf())
+    val searchMovies = MutableStateFlow<List<Movie>>(listOf())
+    //private val _searchMovies = MutableStateFlow<List<Movie>>(emptyList())
+    //val searchMovies: StateFlow<List<Movie>> = _searchMovies
 
     fun getMovies(language: String = "fr"){
         viewModelScope.launch {
@@ -46,10 +49,12 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun searchMovies(language: String = "fr"){
+    fun searchMovies(searchQuery: String){
         viewModelScope.launch{
             try {
-                searchMovies.value = api.searchMovie(api_key, language).results
+                searchMovies.value = api.searchMovie(api_key, searchQuery).results
+                //val result = api.searchMovie(api_key, searchQuery, language).results
+                //_searchMovies.value = listOf(result)
             } catch (e: Exception) {
                 Log.e("MainViewModel", "searchMovie: $e")
             }

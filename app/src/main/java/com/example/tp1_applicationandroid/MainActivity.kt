@@ -7,9 +7,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,7 +25,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,6 +62,8 @@ class MainActivity : ComponentActivity() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
             val isProfilDestination =currentDestination?.hasRoute<ProfilDestination>() == true
+            var showSearchBar by remember { mutableStateOf(false) }
+            var searchQuery by remember { mutableStateOf("") }
             TP1ApplicationAndroidTheme {
                 Scaffold(
                     topBar = {
@@ -62,39 +72,63 @@ class MainActivity : ComponentActivity() {
                                 color = Color.LightGray
                             )
                             {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(15.dp)
-                                ) {
-                                    TextButton(
-                                        onClick = { navController.navigate(ProfilDestination()) },
-                                        colors = ButtonDefaults.textButtonColors(Color.DarkGray)
+                                Column {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(15.dp)
                                     ) {
-                                        Text(
-                                            "Profil",
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 15.sp,
-                                            color = Color.LightGray
+                                        TextButton(
+                                            onClick = { navController.navigate(ProfilDestination()) },
+                                            colors = ButtonDefaults.textButtonColors(Color.DarkGray)
+                                        ) {
+                                            Text(
+                                                "Profil",
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 15.sp,
+                                                color = Color.LightGray
+                                            )
+                                        }
+                                        Icon(
+                                            painter = painterResource(R.drawable.baseline_search_24),
+                                            contentDescription = "recherche",
+                                            modifier = Modifier
+                                                .size(30.dp)
+                                                .clickable { showSearchBar = true },
+                                            tint = Color.DarkGray
                                         )
                                     }
-                                    Icon(
-                                        painter = painterResource(R.drawable.baseline_search_24),
-                                        contentDescription = "recherche",
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .clickable { navController.navigate(SearchDestination()) },
-                                        tint = Color.DarkGray
-                                    )
+                                    if (showSearchBar){
+                                        TextField(
+                                            value = searchQuery,
+                                            onValueChange = { searchQuery = it },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(10.dp),
+                                            placeholder = { Text("Entrez votre recherche...") },
+                                            singleLine = true,
+                                            trailingIcon = {
+                                                TextButton(
+                                                    onClick = {
+                                                        showSearchBar = false
+                                                        navController.navigate("search/$searchQuery")
+                                                    },
+                                                    colors = ButtonDefaults.textButtonColors(Color.White)
+                                                ) {
+                                                    Text(text="Rechercher")
+                                                }
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
                     },
 
                     bottomBar = {
-                       if(!isProfilDestination) {
+                        if(!isProfilDestination) {
                             Surface(
                                 color = Color.LightGray
                             )
@@ -141,25 +175,46 @@ class MainActivity : ComponentActivity() {
                                         onClick = { navController.navigate(ActeursDestination()) })
                                 }
                             }
-                       }
+                        }
                     }
                 )
                 { innerPadding ->
-                    NavHost(navController, startDestination = ProfilDestination(),
-                        Modifier.padding(innerPadding)) {
+                    /*Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable(
+                                onClick = { showSearchBar = false },
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            )
+                    ) {*/
+                    NavHost(
+                        navController,
+                        startDestination = ProfilDestination(),
+                        Modifier.padding(innerPadding)
+                    ) {
                         composable<ProfilDestination> { ProfilHome(navController) }
                         composable<FilmsDestination> { Films(viewmodel, navController) }
                         composable<SeriesDestination> { Series(viewmodel, navController) }
                         composable<ActeursDestination> { Acteurs(viewmodel) }
-                        composable<SearchDestination> { Search(viewmodel) }
+                        composable<SearchDestination> { Search(viewmodel, searchQuery) }
                         composable("FilmDetails/{filmId}") { backStackEntry ->
-                            val filmId = backStackEntry.arguments?.getString("filmId") ?: return@composable
-                            FilmDetails(viewmodel, filmId/*, navController*/) }
+                            val filmId = backStackEntry.arguments?.getString("filmId")
+                                ?: return@composable
+                            FilmDetails(viewmodel, filmId/*, navController*/)
+                        }
                         composable("SerieDetails/{serieId}") { backStackEntry ->
-                            val serieId = backStackEntry.arguments?.getString("serieId") ?: return@composable
-                            SerieDetails(viewmodel, serieId/*, navController*/) }
+                            val serieId = backStackEntry.arguments?.getString("serieId")
+                                ?: return@composable
+                            SerieDetails(viewmodel, serieId/*, navController*/)
+                        }
+                        composable("search/{searchQuery}") { backStackEntry ->
+                            val keyword = backStackEntry.arguments?.getString("keyword")
+                                ?: return@composable
+                            Search(viewmodel, searchQuery)
+                        }
                     }
-
+                    //}
                 }
             }
         }

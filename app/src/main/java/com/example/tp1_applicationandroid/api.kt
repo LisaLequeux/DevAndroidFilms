@@ -11,23 +11,11 @@ interface Api {
         @Query("language") language: String
     ): TmdbMoviesResult
 
-    @GET("trending/tv/week")
-    suspend fun seriesweek(
-        @Query("api_key")api_key: String,
-        @Query("language") language: String
-    ): TmdbSeriesResult
-
-    @GET("trending/person/week")
-    suspend fun actorsweek(
-        @Query("api_key")api_key: String,
-        @Query("language") language: String
-    ): TmdbActeursResult
-
-    @GET("movie/api_key")
+    @GET("search/movie")
     suspend fun searchMovie(
         @Query("api_key")api_key: String,
-        @Query("language") language: String
-    ): TmdbSearchResult
+        @Query("searchQuery") searchQuery: String
+    ): TmdbMoviesResult
 
     @GET("movie/{id}")
     suspend fun filmDetails(
@@ -37,10 +25,24 @@ interface Api {
         //@Query("append_to_response") appendToResponse: String = "credits"
     ): Movie
 
+    @GET("trending/tv/week")
+    suspend fun seriesweek(
+        @Query("api_key")api_key: String,
+        @Query("language") language: String
+    ): TmdbSeriesResult
+
     @GET("tv/{id}")
     suspend fun serieDetails(
         @Path("id") id: String,
         @Query("api_key") api_key: String,
         @Query("language") langague: String
     ): Series
+
+    @GET("trending/person/week")
+    suspend fun actorsweek(
+        @Query("api_key")api_key: String,
+        @Query("language") language: String
+    ): TmdbActeursResult
+
+
 }

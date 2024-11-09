@@ -25,10 +25,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 
 @Composable
-fun Search (viewModel: MainViewModel) {
+fun Search (viewModel: MainViewModel, searchQuery: String) {
     LaunchedEffect(Unit) {
-        viewModel.searchMovies()
+        viewModel.searchMovies(searchQuery)
     }
+
+    //val searchMovies by viewModel.searchMovies.collectAsStateWithLifecycle()
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,56 +41,57 @@ fun Search (viewModel: MainViewModel) {
     ) {
         Presentation()
 
-        RappelRecherche()
+        RappelRecherche(searchQuery)
 
         Column {
             CadreFilms(
                 modifier = Modifier.align(Alignment.Start)
             )
-                //Afficher une LazyHorizontalGrid avec les resultats de films recherchés
-                val searchMovies by viewModel.movies.collectAsStateWithLifecycle()
 
-                LazyHorizontalGrid(
-                    rows = GridCells.Fixed(1),
-                    modifier = Modifier.padding(5.dp)
-                ) {
-                    items(searchMovies.size) { index ->
-                        val searchMovie = searchMovies[index]
-                        Card(
+            //Afficher une LazyHorizontalGrid avec les resultats de films recherchés
+            val searchMovies by viewModel.movies.collectAsStateWithLifecycle()
+
+            LazyHorizontalGrid(
+                rows = GridCells.Fixed(1),
+                modifier = Modifier.padding(5.dp)
+            ) {
+                items(searchMovies.size) { index ->
+                    val searchMovie = searchMovies[index]
+                    Card(
+                        modifier = Modifier.padding(5.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray
+                        ),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 8.dp,
+                            pressedElevation = 12.dp,
+                        )
+                    ) {
+                        Column(
                             modifier = Modifier.padding(5.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.LightGray
-                            ),
-                            elevation = CardDefaults.cardElevation(
-                                defaultElevation = 8.dp,
-                                pressedElevation = 12.dp,
-                            )
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Column(
-                                modifier = Modifier.padding(5.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                AsyncImage(
-                                    model = "https://image.tmdb.org/t/p/w500/${searchMovie.poster_path}",
-                                    contentDescription = "poster",
-                                    contentScale = ContentScale.Crop
-                                )
-                                Text(
-                                    searchMovie.title,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp,
-                                    textAlign = TextAlign.Center
-                                )
-                                Text(
-                                    searchMovie.release_date,
-                                    fontStyle = FontStyle.Italic,
-                                    fontSize = 16.sp,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w500/${searchMovie.poster_path}",
+                                contentDescription = "poster",
+                                contentScale = ContentScale.Crop
+                            )
+                            Text(
+                                searchMovie.title,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                searchMovie.release_date,
+                                fontStyle = FontStyle.Italic,
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center
+                            )
                         }
                     }
                 }
+            }
         }
 
         //Afficher une LazyHorizontalGrid avec les resultats de séries recherchées
@@ -126,12 +129,12 @@ fun CadreFilms (modifier: Modifier = Modifier){
 }
 
 @Composable
-fun RappelRecherche (modifier: Modifier = Modifier){
+fun RappelRecherche (searchQuery: String, modifier: Modifier = Modifier){
     Column (
         modifier = modifier.padding(5.dp)
     ){
         Text(
-            text = "Votre recherche était :",
+            text = "Votre recherche était : $searchQuery",
             fontSize = 15.sp,
             fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(5.dp)
