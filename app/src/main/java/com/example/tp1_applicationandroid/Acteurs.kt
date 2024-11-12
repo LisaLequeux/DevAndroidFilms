@@ -91,7 +91,9 @@ fun Acteurs(viewModel: MainViewModel, navController: NavHostController){
                 items(acteurs.size) { index ->
                     val acteur = acteurs[index]
                     Card(
-                        modifier = Modifier.padding(10.dp),
+                        modifier = Modifier.padding(10.dp).clickable {
+                            navController.navigate("ActeurDetails/${acteur.id}")
+                        },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.LightGray
                         ),

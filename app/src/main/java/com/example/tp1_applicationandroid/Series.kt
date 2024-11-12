@@ -89,7 +89,9 @@ fun Series (viewModel: MainViewModel, navController: NavController) {
                 items(series.size) { index ->
                     val serie = series[index]
                     Card(
-                        modifier = Modifier.padding(10.dp),
+                        modifier = Modifier.padding(10.dp).clickable {
+                            navController.navigate("serieDetails/${serie.id}")
+                        },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.LightGray
                         ),

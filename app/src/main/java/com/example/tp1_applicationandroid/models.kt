@@ -65,7 +65,7 @@ data class Actors(
     val deathday: String?,
 )
 
-data class TmdbSearchResult(
+/*data class TmdbSearchResult(
     val page: Int = 0,
     val results: List<Search> = listOf(),
     val total_pages: Int,
@@ -87,7 +87,7 @@ data class Search(
     val poster_path: String,
     val vote_average: Double,
     val vote_count: Int
-)
+)*/
 
 data class Genre(
     val id: Int,

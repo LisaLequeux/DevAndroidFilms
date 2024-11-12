@@ -1,6 +1,9 @@
 package com.example.tp1_applicationandroid
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squareup.moshi.Moshi
@@ -26,32 +29,34 @@ class MainViewModel : ViewModel() {
     private val api = retrofit.create(Api::class.java)
 
 
-    //val movies = MutableStateFlow<List<Movie>>(listOf())
-    private val _movies = MutableStateFlow<List<Movie>>(emptyList())
-    val movies: StateFlow<List<Movie>> = _movies
+    val movies = MutableStateFlow<List<Movie>>(listOf())
+    //private val _movies = MutableStateFlow<List<Movie>>(emptyList())
+    //val movies: StateFlow<List<Movie>> = _movies
 
-    //val series = MutableStateFlow<List<Series>>(listOf())
-    private val _series = MutableStateFlow<List<Series>>(emptyList())
-    val series: StateFlow<List<Series>> = _series
+    val series = MutableStateFlow<List<Series>>(listOf())
+    //private val _series = MutableStateFlow<List<Series>>(emptyList())
+   //val series: StateFlow<List<Series>> = _series
 
-    //val actors = MutableStateFlow<List<Actors>>(listOf())
-    private val _actors = MutableStateFlow<List<Actors>>(emptyList())
-    val actors: StateFlow<List<Actors>> = _actors
+    val actors = MutableStateFlow<List<Actors>>(listOf())
+    //private val _actors = MutableStateFlow<List<Actors>>(emptyList())
+    //val actors: StateFlow<List<Actors>> = _actors
 
     //val searchMovies = MutableStateFlow<List<Movie>>(listOf())
-    private val _searchMovies = MutableStateFlow<List<Search>>(emptyList())
+    //private val _searchMovies = MutableStateFlow<List<Movie>>(emptyList())
     //val searchMovies: StateFlow<List<Search>> = _searchMovies
+
+    var query by mutableStateOf("")
 
     fun getMovies(language: String = "fr"){
         viewModelScope.launch {
-            _movies.value = api.moviesweek(api_key, language).results
+            movies.value = api.moviesweek(api_key, language).results
         }
     }
 
     fun getFilmDetails(filmId: String, language: String = "fr") {
         viewModelScope.launch {
             val movieDetails = api.filmDetails(filmId, api_key, language)
-            _movies.value = listOf(movieDetails)
+            movies.value = listOf(movieDetails)
         }
     }
 
@@ -66,12 +71,11 @@ class MainViewModel : ViewModel() {
             }
         }
     }*/
-    fun searchMovies(query: String) {
+    fun searchMovies() {
         viewModelScope.launch {
             try {
-                val result = api.searchMovie(api_key, query).results
-                _searchMovies.value = result
-                Log.d("MainViewModel", "API Response: $result")
+                movies.value = api.searchMovie(api_key, query).results
+                //Log.d("MainViewModel", "API Response: $result")
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching movies: $e")
             }
@@ -80,27 +84,49 @@ class MainViewModel : ViewModel() {
 
     fun getSeries(language: String = "fr"){
         viewModelScope.launch{
-            _series.value = api.seriesweek(api_key, language).results
+            series.value = api.seriesweek(api_key, language).results
         }
     }
 
     fun getSerieDetails(serieId: String, language: String = "fr") {
         viewModelScope.launch {
             val serieDetails = api.serieDetails(serieId, api_key, language)
-            _series.value = listOf(serieDetails)
+            series.value = listOf(serieDetails)
+        }
+    }
+
+    fun searchSeries() {
+        viewModelScope.launch {
+            try {
+                series.value = api.searchSerie(api_key, query).results
+                //Log.d("MainViewModel", "API Response: $result")
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error fetching movies: $e")
+            }
         }
     }
 
     fun getActors(language: String = "fr"){
         viewModelScope.launch{
-            _actors.value = api.actorsweek(api_key, language).results
+            actors.value = api.actorsweek(api_key, language).results
         }
     }
 
     fun getActorDetails(actorId: String, language: String = "fr") {
         viewModelScope.launch {
             val actorDetails = api.actorDetails(actorId, api_key, language)
-            _actors.value = listOf(actorDetails)
+            actors.value = listOf(actorDetails)
+        }
+    }
+
+    fun searchActeurs() {
+        viewModelScope.launch {
+            try {
+                actors.value = api.searchActeur(api_key, query).results
+                //Log.d("MainViewModel", "API Response: $result")
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error fetching movies: $e")
+            }
         }
     }
 

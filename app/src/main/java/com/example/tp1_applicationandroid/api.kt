@@ -15,7 +15,7 @@ interface Api {
     suspend fun searchMovie(
         @Query("api_key") api_key: String,
         @Query("query") query: String,
-    ): TmdbSearchResult
+    ): TmdbMoviesResult
 
     @GET("movie/{id}")
     suspend fun filmDetails(
@@ -37,6 +37,12 @@ interface Api {
         @Query("language") langague: String
     ): Series
 
+    @GET("search/tv")
+    suspend fun searchSerie(
+        @Query("api_key") api_key: String,
+        @Query("query") query: String,
+    ): TmdbSeriesResult
+
     @GET("trending/person/week")
     suspend fun actorsweek(
         @Query("api_key")api_key: String,
@@ -49,5 +55,11 @@ interface Api {
         @Query("api_key") api_key: String,
         @Query("language") langague: String
     ): Actors
+
+    @GET("search/person")
+suspend fun searchActeur(
+        @Query("api_key") api_key: String,
+        @Query("query") query: String,
+    ): TmdbActeursResult
 
 }

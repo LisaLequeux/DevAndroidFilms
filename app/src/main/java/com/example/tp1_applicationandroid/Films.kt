@@ -37,6 +37,12 @@ fun Films (viewModel: MainViewModel, navController: NavHostController) {
     when (windowSizeClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> {
             LazyVerticalGrid(
+                /*columns = when (windowSizeClass.windowWidthSizeClass) {
+                    WindowWidthSizeClass.COMPACT -> GridCells.Fixed(2)
+                    WindowWidthSizeClass.MEDIUM -> GridCells.Fixed(3)
+                    WindowWidthSizeClass.EXPANDED -> GridCells.Fixed(4)
+                    else -> GridCells.Fixed(2)
+                },*/
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.padding(5.dp)
             ) {
@@ -81,6 +87,8 @@ fun Films (viewModel: MainViewModel, navController: NavHostController) {
             }
         }
 
+
+
         else -> {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(4),
@@ -89,7 +97,9 @@ fun Films (viewModel: MainViewModel, navController: NavHostController) {
                 items(movies.size) { index ->
                     val movie = movies[index]
                     Card(
-                        modifier = Modifier.padding(10.dp),
+                        modifier = Modifier.padding(10.dp).clickable {
+                            navController.navigate("FilmDetails/${movie.id}")
+                        },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.LightGray
                         ),
