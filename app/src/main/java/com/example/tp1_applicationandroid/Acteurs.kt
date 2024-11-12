@@ -1,5 +1,6 @@
 package com.example.tp1_applicationandroid
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,11 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 
 @Composable
-fun Acteurs(viewModel: MainViewModel){
+fun Acteurs(viewModel: MainViewModel, navController: NavHostController){
     //Initialisation au démarrage
     LaunchedEffect(Unit) {
         viewModel.getActors()
@@ -40,7 +42,9 @@ fun Acteurs(viewModel: MainViewModel){
                 items(acteurs.size) { index ->
                     val acteur = acteurs[index]
                     Card(
-                        modifier = Modifier.padding(5.dp),
+                        modifier = Modifier.padding(5.dp).clickable {
+                            navController.navigate("ActeurDetails/${acteur.id}")
+                        },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.LightGray
                         ),
@@ -57,9 +61,20 @@ fun Acteurs(viewModel: MainViewModel){
                             model = "https://image.tmdb.org/t/p/w500/${acteur.profile_path}",
                             contentDescription = "poster",
                         )
-                        Text(acteur.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                         Text(
-                            acteur.known_for_department,
+                            acteur.name,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+                        /*if(acteur.name != acteur.original_name) {
+                            Text(
+                                acteur.original_name ?: "",
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 18.sp
+                            )
+                        }*/
+                        Text(
+                            acteur.known_for_department ?: "",
                             fontStyle = FontStyle.Italic,
                             fontSize = 16.sp
                         )
@@ -94,9 +109,20 @@ fun Acteurs(viewModel: MainViewModel){
                                 contentDescription = "poster",
                                 //placeholder = /*mettre une image par défaut*/
                             )
-                            Text(acteur.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                             Text(
-                                acteur.known_for_department,
+                                acteur.name,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                            /*if(acteur.name != acteur.original_name) {
+                                Text(
+                                    acteur.original_name ?: "",
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 18.sp
+                                )
+                            }*/
+                            Text(
+                                acteur.known_for_department ?: "",
                                 fontStyle = FontStyle.Italic,
                                 fontSize = 16.sp
                             )

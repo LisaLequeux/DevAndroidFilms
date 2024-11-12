@@ -56,10 +56,13 @@ data class TmdbActeursResult(
 
 data class Actors(
     val id: Int,
-    val known_for_department: String,
+    val known_for_department: String?,
     val name: String,
-    val original_name: String,
+    val original_name: String?,
     val profile_path: String?,
+    val biography: String?,
+    val birthday: String?,
+    val deathday: String?,
 )
 
 data class TmdbSearchResult(

@@ -25,12 +25,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 
 @Composable
-fun Search (viewModel: MainViewModel, searchQuery: String) {
-    LaunchedEffect(Unit) {
-        viewModel.searchMovies(searchQuery)
+fun Search (viewModel: MainViewModel, query: String) {
+    LaunchedEffect(query) {
+        viewModel.searchMovies(query)
     }
 
-    //val searchMovies by viewModel.searchMovies.collectAsStateWithLifecycle()
+    val searchMovies by viewModel.movies.collectAsStateWithLifecycle()
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,15 +41,12 @@ fun Search (viewModel: MainViewModel, searchQuery: String) {
     ) {
         Presentation()
 
-        RappelRecherche(searchQuery)
+        RappelRecherche(query)
 
         Column {
             CadreFilms(
                 modifier = Modifier.align(Alignment.Start)
             )
-
-            //Afficher une LazyHorizontalGrid avec les resultats de films recherchés
-            val searchMovies by viewModel.movies.collectAsStateWithLifecycle()
 
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(1),
@@ -57,37 +54,38 @@ fun Search (viewModel: MainViewModel, searchQuery: String) {
             ) {
                 items(searchMovies.size) { index ->
                     val searchMovie = searchMovies[index]
-                    Card(
-                        modifier = Modifier.padding(5.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray
-                        ),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 8.dp,
-                            pressedElevation = 12.dp,
-                        )
-                    ) {
-                        Column(
+                        Card(
                             modifier = Modifier.padding(5.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.LightGray
+                            ),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 8.dp,
+                                pressedElevation = 12.dp,
+                            )
                         ) {
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w500/${searchMovie.poster_path}",
-                                contentDescription = "poster",
-                                contentScale = ContentScale.Crop
-                            )
-                            Text(
-                                searchMovie.title,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                searchMovie.release_date,
-                                fontStyle = FontStyle.Italic,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center
-                            )
+                            Column(
+                                modifier = Modifier.padding(5.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                AsyncImage(
+                                    model = "https://image.tmdb.org/t/p/w500/${searchMovie.poster_path}",
+                                    contentDescription = "poster",
+                                    contentScale = ContentScale.Crop
+                                )
+                                Text(
+                                    searchMovie.title,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    searchMovie.release_date,
+                                    fontStyle = FontStyle.Italic,
+                                    fontSize = 16.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
@@ -98,7 +96,7 @@ fun Search (viewModel: MainViewModel, searchQuery: String) {
         //Afficher une LazyHorizontalGrid avec les resultats d'acteurs recherchés
 
     }
-}
+
 
 @Composable
 fun Presentation (modifier: Modifier = Modifier){

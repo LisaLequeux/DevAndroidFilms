@@ -13,16 +13,15 @@ interface Api {
 
     @GET("search/movie")
     suspend fun searchMovie(
-        @Query("api_key")api_key: String,
-        @Query("searchQuery") searchQuery: String
-    ): TmdbMoviesResult
+        @Query("api_key") api_key: String,
+        @Query("query") query: String,
+    ): TmdbSearchResult
 
     @GET("movie/{id}")
     suspend fun filmDetails(
         @Path("id") id: String,
         @Query("api_key") api_key: String,
         @Query("language") langague: String
-        //@Query("append_to_response") appendToResponse: String = "credits"
     ): Movie
 
     @GET("trending/tv/week")
@@ -44,5 +43,11 @@ interface Api {
         @Query("language") language: String
     ): TmdbActeursResult
 
+    @GET("person/{id}")
+    suspend fun actorDetails(
+        @Path("id") id: String,
+        @Query("api_key") api_key: String,
+        @Query("language") langague: String
+    ): Actors
 
 }

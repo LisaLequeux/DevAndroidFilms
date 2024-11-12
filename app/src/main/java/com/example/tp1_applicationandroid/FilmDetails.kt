@@ -1,7 +1,9 @@
 package com.example.tp1_applicationandroid
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,18 +52,6 @@ fun FilmDetails(viewModel: MainViewModel,  filmId: String/*, navController: NavC
                     modifier = Modifier.fillMaxSize().padding(5.dp)
                 ) {
 
-
-                    //Pour afficher le poster en entier :
-                    /*AsyncImage(
-                        model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
-                        contentDescription = "Movie Poster",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            //.height(200.dp)
-                            .padding(bottom = 5.dp)
-                    )*/
-
                     Card (
                         colors = CardDefaults.cardColors(containerColor = Color.LightGray)
                     ) {
@@ -83,26 +73,6 @@ fun FilmDetails(viewModel: MainViewModel,  filmId: String/*, navController: NavC
                                 text = movie.title,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(5.dp)
-                            )
-                            if (movie.title != movie.original_title) {
-                                Text(
-                                    text = "Titre original : ${movie.original_title}",
-                                    fontSize = 16.sp,
-                                    fontStyle = FontStyle.Italic,
-                                    modifier = Modifier.padding(5.dp)
-                                )
-                                Text(
-                                    text = "Langue originale : ${movie.original_language}",
-                                    fontSize = 16.sp,
-                                    fontStyle = FontStyle.Italic,
-                                    modifier = Modifier.padding(5.dp)
-                                )
-                            }
-                            Text(
-                                text = "Id : ${movie.id}",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
                                 modifier = Modifier.padding(5.dp)
                             )
                             Text(
@@ -178,6 +148,52 @@ fun FilmDetails(viewModel: MainViewModel,  filmId: String/*, navController: NavC
                             fontWeight = FontWeight.Normal,
                         )
                         Spacer(modifier = Modifier.height(10.dp))
+                    }
+                    Column (
+                        horizontalAlignment = AbsoluteAlignment.Left,
+                        modifier = Modifier.fillMaxSize().padding(5.dp)
+                    ){
+                        Text(
+                            text = "Informations suplémentaires :",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row {
+                            //Pour afficher le poster en entier :
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
+                                contentDescription = "Movie Poster",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    //.height(200.dp)
+                                    .padding(bottom = 5.dp)
+                            )
+                            Column {
+                                if (movie.title != movie.original_title) {
+                                    Text(
+                                        text = "Titre original : ${movie.original_title}",
+                                        fontSize = 16.sp,
+                                        fontStyle = FontStyle.Italic,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                    Text(
+                                        text = "Langue originale : ${movie.original_language}",
+                                        fontSize = 16.sp,
+                                        fontStyle = FontStyle.Italic,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+                                Text(
+                                    text = "Id : ${movie.id}",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    modifier = Modifier.padding(5.dp)
+                                )
+                            }
+
+                        }
                     }
                     }
                 }

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -49,7 +50,6 @@ import androidx.navigation.compose.composable
 @Serializable class FilmsDestination
 @Serializable class SeriesDestination
 @Serializable class ActeursDestination
-@Serializable class SearchDestination
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("RestrictedApi")
@@ -64,6 +64,7 @@ class MainActivity : ComponentActivity() {
             val isProfilDestination =currentDestination?.hasRoute<ProfilDestination>() == true
             var showSearchBar by remember { mutableStateOf(false) }
             var searchQuery by remember { mutableStateOf("") }
+
             TP1ApplicationAndroidTheme {
                 Scaffold(
                     topBar = {
@@ -179,7 +180,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
                 { innerPadding ->
-                    /*Box(
+                    Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .clickable(
@@ -187,7 +188,7 @@ class MainActivity : ComponentActivity() {
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
                             )
-                    ) {*/
+                    ) {
                     NavHost(
                         navController,
                         startDestination = ProfilDestination(),
@@ -196,8 +197,7 @@ class MainActivity : ComponentActivity() {
                         composable<ProfilDestination> { ProfilHome(navController) }
                         composable<FilmsDestination> { Films(viewmodel, navController) }
                         composable<SeriesDestination> { Series(viewmodel, navController) }
-                        composable<ActeursDestination> { Acteurs(viewmodel) }
-                        composable<SearchDestination> { Search(viewmodel, searchQuery) }
+                        composable<ActeursDestination> { Acteurs(viewmodel, navController) }
                         composable("FilmDetails/{filmId}") { backStackEntry ->
                             val filmId = backStackEntry.arguments?.getString("filmId")
                                 ?: return@composable
@@ -208,13 +208,18 @@ class MainActivity : ComponentActivity() {
                                 ?: return@composable
                             SerieDetails(viewmodel, serieId/*, navController*/)
                         }
-                        composable("search/{searchQuery}") { backStackEntry ->
-                            val keyword = backStackEntry.arguments?.getString("keyword")
+                        composable("ActeurDetails/{actorId}") { backStackEntry ->
+                            val actorId = backStackEntry.arguments?.getString("actorId")
                                 ?: return@composable
-                            Search(viewmodel, searchQuery)
+                            ActeurDetails(viewmodel, actorId/*, navController*/)
+                        }
+                        composable("Search/{query}") { backStackEntry ->
+                            val query = backStackEntry.arguments?.getString("query")
+                                ?: return@composable
+                            Search(viewmodel, query)
                         }
                     }
-                    //}
+                    }
                 }
             }
         }
