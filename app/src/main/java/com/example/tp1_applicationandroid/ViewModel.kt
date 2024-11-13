@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -132,9 +131,9 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun collectionHorror(){
+    fun collectionHorror() {
         viewModelScope.launch {
-            horror.value = api.collectHorror(api_key, query).results
+            horror.value = api.collectHorror(api_key, query="horror").results
         }
     }
 }

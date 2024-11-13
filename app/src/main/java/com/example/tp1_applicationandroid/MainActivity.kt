@@ -171,7 +171,9 @@ class MainActivity : ComponentActivity() {
                                 {
                                     NavigationBar(
                                         containerColor = Color.LightGray,
-                                        modifier = Modifier.displayCutoutPadding().height(80.dp)//.clip(RoundedCornerShape(20.dp)),
+                                        modifier = Modifier
+                                            .displayCutoutPadding()
+                                            .height(80.dp)//.clip(RoundedCornerShape(20.dp)),
                                     ) {
                                         NavigationBarItem(
                                             icon = {
@@ -252,7 +254,7 @@ class MainActivity : ComponentActivity() {
                             composable<FilmsDestination> { Films(viewmodel, navController) }
                             composable<SeriesDestination> { Series(viewmodel, navController) }
                             composable<ActeursDestination> { Acteurs(viewmodel, navController) }
-                            composable<CollectionDestination>{ Collection(viewmodel) }
+                            composable<CollectionDestination>{ Collection(viewmodel)}
                             composable("FilmDetails/{filmId}") { backStackEntry ->
                                 val filmId = backStackEntry.arguments?.getString("filmId")
                                     ?: return@composable
@@ -268,11 +270,11 @@ class MainActivity : ComponentActivity() {
                                     ?: return@composable
                                 ActeurDetails(viewmodel, actorId)
                             }
-                            composable("Search/{query}") { backStackEntry ->
+                            /*composable("Search/{query}") { backStackEntry ->
                                 val query = backStackEntry.arguments?.getString("query")
                                     ?: return@composable
                                 Search(viewmodel, navController)
-                            }
+                            }*/
                         }
                     }
                 }
@@ -289,7 +291,9 @@ fun CustomNavigationRail(navController: NavController) {
 
     if (!isProfilDestination) {
         androidx.compose.material3.NavigationRail(
-            modifier = Modifier.fillMaxHeight().width(72.dp),
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(72.dp),
             containerColor = Color.LightGray
         ) {
             NavigationRailItem(
@@ -297,7 +301,9 @@ fun CustomNavigationRail(navController: NavController) {
                     Icon(
                         painter = painterResource(R.drawable.baseline_movie_24),
                         contentDescription = "films",
-                        modifier = Modifier.size(20.dp).align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .size(20.dp)
+                            .align(Alignment.CenterHorizontally),
                         tint = Color.DarkGray
                     )
                 },
@@ -310,7 +316,9 @@ fun CustomNavigationRail(navController: NavController) {
                     Icon(
                         painter = painterResource(R.drawable.baseline_tv_24),
                         contentDescription = "series",
-                        modifier = Modifier.size(20.dp).align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .size(20.dp)
+                            .align(Alignment.CenterHorizontally),
                         tint = Color.DarkGray
                     )
                 },
@@ -323,7 +331,9 @@ fun CustomNavigationRail(navController: NavController) {
                     Icon(
                         painter = painterResource(R.drawable.baseline_person_24),
                         contentDescription = "acteurs",
-                        modifier = Modifier.size(20.dp).align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .size(20.dp)
+                            .align(Alignment.CenterHorizontally),
                         tint = Color.DarkGray
                     )
                 },
