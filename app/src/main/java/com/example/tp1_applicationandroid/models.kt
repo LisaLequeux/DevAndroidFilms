@@ -93,3 +93,20 @@ data class Genre(
     val id: Int,
     val name: String = ""
 )
+
+data class TmdbHorrorResult(
+    val page: Int = 0,
+    val results: List<Horror> = listOf(),
+    val total_pages: Int,
+    val total_results: Int
+)
+
+data class Horror(
+    val adult: Boolean,
+    val backdrop_path: String,
+    val id: Int,
+    val name: String,
+    val original_language: String,
+    val original_name: String,
+    val overview: String
+)
