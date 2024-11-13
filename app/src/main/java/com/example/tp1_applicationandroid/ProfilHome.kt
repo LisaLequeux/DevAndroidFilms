@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -139,8 +140,15 @@ fun ProfilHome(navController: NavHostController) {
         @Composable
         fun BtnDemarrer(navController: NavController) {
             Button(
-                onClick = { navController.navigate(FilmsDestination()) }
-            ) {
-                Text(text = "Démarrer")
+                onClick = { navController.navigate(FilmsDestination()) },
+                colors = ButtonDefaults.textButtonColors(Color.DarkGray),
+                modifier = Modifier.padding(20.dp)
+                ) {
+                Text(
+                    text = "Démarrer",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp
+                )
             }
         }

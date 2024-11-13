@@ -55,6 +55,7 @@ import com.example.tp1_applicationandroid.ui.theme.TP1ApplicationAndroidTheme
 import kotlinx.serialization.Serializable
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.composable
+import androidx.compose.material3.FloatingActionButton
 
 @Serializable class ProfilDestination
 @Serializable class FilmsDestination
@@ -73,7 +74,7 @@ class MainActivity : ComponentActivity() {
             val currentDestination = navBackStackEntry?.destination
             val isProfilDestination =currentDestination?.hasRoute<ProfilDestination>() == true
             var showSearchBar by remember { mutableStateOf(false) }
-//            var query by remember { mutableStateOf("") }
+            //var query by remember { mutableStateOf("") }
             val configuration = LocalConfiguration.current
             val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
@@ -82,9 +83,59 @@ class MainActivity : ComponentActivity() {
 
                     topBar = {
                         if (!isProfilDestination) {
-                            /*if (isLandscape){
-                                CustomTopBar(navController)
-                            } else {*/
+                            if (isLandscape) {
+                                Row {
+                                    TopLeftFloatingActionButton(navController)
+                                    FloatingActionButton(
+                                        onClick = { showSearchBar = !showSearchBar },
+                                        containerColor = Color.LightGray,
+                                        modifier = Modifier.padding(5.dp)
+                                    ) {
+                                        if (showSearchBar) {
+                                            TextField(
+                                                value = viewmodel.query,
+                                                onValueChange = { viewmodel.query = it },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(10.dp),
+                                                placeholder = { Text("Entrez votre recherche...") },
+                                                singleLine = true,
+                                                keyboardOptions = KeyboardOptions.Default.copy(
+                                                    imeAction = ImeAction.Search
+                                                ),
+                                                keyboardActions = KeyboardActions(
+                                                    onSearch = {
+                                                        showSearchBar = false
+                                                        viewmodel.searchMovies()
+                                                    }
+                                                ),
+                                                trailingIcon = {
+                                                    TextButton(
+                                                        onClick = {
+                                                            showSearchBar = false
+                                                            viewmodel.searchMovies()
+                                                            navController.navigate("search/${viewmodel.query}")
+                                                        },
+                                                        colors = ButtonDefaults.textButtonColors(
+                                                            Color.White
+                                                        ),
+                                                        modifier = Modifier.padding(5.dp)
+                                                    ) {
+                                                        Text(text = "Rechercher")
+                                                    }
+                                                }
+                                            )
+                                        } else {
+                                            Icon(
+                                                painter = painterResource(R.drawable.baseline_search_24),
+                                                contentDescription = "recherche",
+                                                tint = Color.DarkGray
+                                            )
+                                        }
+                                    }
+                                }
+
+                        } else {
                                 Surface(
                                     color = Color.LightGray
                                 )
@@ -99,7 +150,7 @@ class MainActivity : ComponentActivity() {
                                         ) {
                                             TextButton(
                                                 onClick = { navController.navigate(ProfilDestination()) },
-                                                colors = ButtonDefaults.textButtonColors(Color.DarkGray)
+                                                colors = ButtonDefaults.textButtonColors(Color.DarkGray),
                                             ) {
                                                 Text(
                                                     "Profil",
@@ -140,14 +191,15 @@ class MainActivity : ComponentActivity() {
                                                             viewmodel.searchMovies()
                                                             navController.navigate("search/${viewmodel.query}")
                                                         },
-                                                        colors = ButtonDefaults.textButtonColors(Color.White)
+                                                        colors = ButtonDefaults.textButtonColors(Color.White),
+                                                        modifier = Modifier.padding(5.dp)
                                                     ) {
                                                         Text(text="Rechercher")
                                                     }
                                                 }
                                             )
                                         }
-                                    //}
+                                    }
                                 }
                             }
                         }
@@ -313,7 +365,21 @@ fun CustomNavigationRail(navController: NavController) {
     }
 }
 
-/*
+@Composable
+fun TopLeftFloatingActionButton(navController: NavController){
+    FloatingActionButton(
+        onClick = { navController.navigate(ProfilDestination()) },
+        containerColor = Color.DarkGray,
+        modifier = Modifier.padding(5.dp)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.baseline_person_24),
+            contentDescription = "profil",
+            tint = Color.White
+        )
+    }
+}
+
 @Composable
 fun CustomTopBar(navController: NavController){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -373,5 +439,4 @@ fun CustomTopBar(navController: NavController){
             }
         }
     }
-}
-*/
+//}

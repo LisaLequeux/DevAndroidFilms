@@ -63,7 +63,7 @@ fun Search (viewModel: MainViewModel, navController: NavController) {
                 CadreFilms()
                 LazyHorizontalGrid(
                     rows = GridCells.Fixed(1),
-                    modifier = Modifier.padding(5.dp).height(350.dp)
+                    modifier = Modifier.padding(5.dp).height(360.dp)
                 ) {
                     items(searchMovies.size) { index ->
                         val searchMovie = searchMovies[index]
