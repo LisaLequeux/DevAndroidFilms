@@ -32,97 +32,107 @@ fun Series (viewModel: MainViewModel, navController: NavController) {
         viewModel.getSeries()
     }
 
-    //La fonction collectAsStateWithLifecycle permet de sortir de l'état provisoir
-    val series by viewModel.series.collectAsStateWithLifecycle()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    when (windowSizeClass.windowWidthSizeClass) {
-        WindowWidthSizeClass.COMPACT -> {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.padding(5.dp)
+    val isPortrait = windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+
+    //On vérifie si on est en mode portrait ou paysage
+    if (isPortrait) {
+        seriePortait(navController, viewModel)
+    } else {
+        seriePaysage(navController, viewModel)
+    }
+}
+
+@Composable
+fun seriePortait(navController: NavController, viewModel: MainViewModel){
+    val series by viewModel.series.collectAsStateWithLifecycle()
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier.padding(5.dp)
+    ) {
+        items(series.size) { index ->
+            val serie = series[index]
+            Card(
+                modifier = Modifier.padding(5.dp).clickable {
+                    navController.navigate("serieDetails/${serie.id}")
+                },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.LightGray
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 8.dp,
+                    pressedElevation = 12.dp,
+                )
             ) {
-                items(series.size) { index ->
-                    val serie = series[index]
-                    Card(
-                        modifier = Modifier.padding(5.dp).clickable {
-                            navController.navigate("serieDetails/${serie.id}")
-                        },
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray
-                        ),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 8.dp,
-                            pressedElevation = 12.dp,
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(5.dp),
-                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
-                        ) {
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w500/${serie.poster_path}",
-                                contentDescription = "poster",
-                                contentScale = ContentScale.Crop
-                            )
-                            Text(
-                                serie.name,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                serie.first_air_date,
-                                fontStyle = FontStyle.Italic,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
+                Column(
+                    modifier = Modifier.padding(5.dp),
+                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                ) {
+                    AsyncImage(
+                        model = "https://image.tmdb.org/t/p/w500/${serie.poster_path}",
+                        contentDescription = "poster",
+                        contentScale = ContentScale.Crop
+                    )
+                    Text(
+                        serie.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        serie.first_air_date,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
-        else -> {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
-                modifier = Modifier.padding(10.dp)
+    }
+}
+
+@Composable
+fun seriePaysage(navController: NavController, viewModel: MainViewModel){
+    val series by viewModel.series.collectAsStateWithLifecycle()
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(4),
+        modifier = Modifier.padding(5.dp)
+    ) {
+        items(series.size) { index ->
+            val serie = series[index]
+            Card(
+                modifier = Modifier.padding(10.dp).clickable {
+                    navController.navigate("serieDetails/${serie.id}")
+                },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.LightGray
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 8.dp,
+                    pressedElevation = 12.dp,
+                )
             ) {
-                items(series.size) { index ->
-                    val serie = series[index]
-                    Card(
-                        modifier = Modifier.padding(10.dp).clickable {
-                            navController.navigate("serieDetails/${serie.id}")
-                        },
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray
-                        ),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 8.dp,
-                            pressedElevation = 12.dp,
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(5.dp),
-                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
-                        ) {
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w500/${serie.poster_path}",
-                                contentDescription = "poster",
-                                contentScale = ContentScale.Crop
-                            )
-                            Text(
-                                serie.name,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                serie.first_air_date,
-                                fontStyle = FontStyle.Italic,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
+                Column(
+                    modifier = Modifier.padding(5.dp),
+                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                ) {
+                    AsyncImage(
+                        model = "https://image.tmdb.org/t/p/w500/${serie.poster_path}",
+                        contentDescription = "poster",
+                        contentScale = ContentScale.Crop
+                    )
+                    Text(
+                        serie.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        serie.first_air_date,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }

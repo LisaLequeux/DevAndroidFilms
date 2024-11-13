@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 //import androidx.navigation.NavController
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -26,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 
 @Composable
@@ -39,165 +41,42 @@ fun FilmDetails(viewModel: MainViewModel,  filmId: String/*, navController: NavC
     val movies by viewModel.movies.collectAsState()
     val movie = movies.find { it.id == filmId.toInt() }
 
+    //val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    //val isPortrait = windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+
     //vérifie que l'objet movie n'est jamais null, si c'est le cas le let ne s'applique pas mais le run
     movie?.let {
-        val genreNames = movie.genres.joinToString(", ") { it.name }
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),
             modifier = Modifier.padding(5.dp)
         ) {
             item {
-                Column(
-                    horizontalAlignment = CenterHorizontally,
-                    modifier = Modifier.fillMaxSize().padding(5.dp)
-                ) {
-
-                    Card (
-                        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
-                    ) {
-                        AsyncImage(
-                            model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
-                            contentDescription = "Movie Poster",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                //.fillMaxHeight()
-                                .height(200.dp)
-                                .padding(bottom = 5.dp)
-                        )
-
-                        Column (
-                            horizontalAlignment = CenterHorizontally,
-                            modifier = Modifier.fillMaxSize().padding(5.dp)
-                        ){
-                            Text(
-                                text = movie.title,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(5.dp)
-                            )
-                            Text(
-                                text = "Sorti le : ${movie.release_date}",
-                                fontSize = 16.sp,
-                                fontStyle = FontStyle.Italic,
-                                modifier = Modifier.padding(bottom = 5.dp)
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                        }
-                    }
-
+                //if(isPortrait){
                     Column(
-                        horizontalAlignment = AbsoluteAlignment.Left,
-                        modifier = Modifier.fillMaxSize().padding(5.dp)
-                    ){
-                        Text (
-                            text = "Résumé :",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(5.dp)
-                        )
-                        Text(
-                            text = movie.overview,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Normal,
-                            modifier = Modifier.padding(5.dp)
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-
-                    Column(
-                        horizontalAlignment = AbsoluteAlignment.Left,
-                        modifier = Modifier.fillMaxSize().padding(5.dp)
-                    ){
-                        Text(
-                            text = "Genres :",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(5.dp)
-                        )
-                        Text(
-                            text = genreNames,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                            modifier = Modifier.padding(5.dp)
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-
-                    Column(
-                        horizontalAlignment = AbsoluteAlignment.Left,
+                        horizontalAlignment = CenterHorizontally,
                         modifier = Modifier.fillMaxSize().padding(5.dp)
                     ) {
-                        Text(
-                            text = "Avis du public :",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text(
-                            text = "Noté : ${movie.vote_average}/10",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text(
-                            text = "Popularité : ${movie.popularity}",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                        )
-                        Text(
-                            text = "Nombre de votes : ${movie.vote_count}",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                    Column (
-                        horizontalAlignment = AbsoluteAlignment.Left,
-                        modifier = Modifier.fillMaxSize().padding(5.dp)
-                    ){
-                        Text(
-                            text = "Informations suplémentaires :",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row {
-                            //Pour afficher le poster en entier :
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
-                                contentDescription = "Movie Poster",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    //.height(200.dp)
-                                    .padding(bottom = 5.dp)
-                            )
+                        cardPresentation(viewModel, filmId)
+                        resume(viewModel, filmId)
+                        genres(viewModel, filmId)
+                        avispublic(viewModel, filmId)
+                        autresinfos(viewModel, filmId)
+                    //}
+                /*} else {
+                    Row (modifier = Modifier.fillMaxSize().padding(5.dp)){
+                        Column {
+                            cardPresentation(viewModel, filmId)
                             Column {
-                                if (movie.title != movie.original_title) {
-                                    Text(
-                                        text = "Titre original : ${movie.original_title}",
-                                        fontSize = 16.sp,
-                                        fontStyle = FontStyle.Italic,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
-                                    Text(
-                                        text = "Langue originale : ${movie.original_language}",
-                                        fontSize = 16.sp,
-                                        fontStyle = FontStyle.Italic,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
-                                }
-                                Text(
-                                    text = "Id : ${movie.id}",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    modifier = Modifier.padding(5.dp)
-                                )
+                                resume(viewModel, filmId)
+                                genres(viewModel, filmId)
+                                avispublic(viewModel, filmId)
+                                autresinfos(viewModel, filmId)
                             }
-
                         }
-                    }
-                    }
+                    }*/
                 }
             }
+        }
     }?: run {
         Text(
             text = "Film introuvable",
@@ -205,5 +84,185 @@ fun FilmDetails(viewModel: MainViewModel,  filmId: String/*, navController: NavC
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(5.dp)
         )
+    }
+}
+
+@Composable
+fun cardPresentation(viewModel: MainViewModel, filmId: String) {
+    val movies by viewModel.movies.collectAsState()
+    val movie = movies.find { it.id == filmId.toInt() }
+    if (movie != null) {
+        Card (
+        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+    ) {
+        AsyncImage(
+            model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
+            contentDescription = "Movie Poster",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                //.fillMaxHeight()
+                .height(200.dp)
+                .padding(bottom = 5.dp)
+        )
+
+        Column (
+            horizontalAlignment = CenterHorizontally,
+            modifier = Modifier.fillMaxSize().padding(5.dp)
+        ){
+            Text(
+                text = movie.title,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(5.dp)
+            )
+            Text(
+                text = "Sorti le : ${movie.release_date}",
+                fontSize = 16.sp,
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier.padding(bottom = 5.dp)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+    }
+}
+}
+
+@Composable
+fun resume(viewModel: MainViewModel, filmId: String) {
+    val movies by viewModel.movies.collectAsState()
+    val movie = movies.find { it.id == filmId.toInt() }
+    if (movie != null) {
+        Column(
+            horizontalAlignment = AbsoluteAlignment.Left,
+            modifier = Modifier.fillMaxSize().padding(5.dp)
+        ){
+            Text (
+                text = "Résumé :",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(5.dp)
+            )
+            Text(
+                text = movie.overview,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier.padding(5.dp)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+    }
+}
+
+@Composable
+fun genres(viewModel: MainViewModel, filmId: String) {
+    val movies by viewModel.movies.collectAsState()
+    val movie = movies.find { it.id == filmId.toInt() }
+    if (movie != null) {
+        val genreNames = movie.genres.joinToString(", ") { it.name }
+        Column(
+        horizontalAlignment = AbsoluteAlignment.Left,
+        modifier = Modifier.fillMaxSize().padding(5.dp)
+    ){
+        Text(
+            text = "Genres :",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(5.dp)
+        )
+        Text(
+            text = genreNames,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            modifier = Modifier.padding(5.dp)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+    }
+}
+}
+
+@Composable
+fun avispublic(viewModel: MainViewModel, filmId: String) {
+    val movies by viewModel.movies.collectAsState()
+    val movie = movies.find { it.id == filmId.toInt() }
+    if (movie != null) {
+        Column(
+            horizontalAlignment = AbsoluteAlignment.Left,
+            modifier = Modifier.fillMaxSize().padding(5.dp)
+        ) {
+            Text(
+                text = "Avis du public :",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = "Noté : ${movie.vote_average}/10",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = "Popularité : ${movie.popularity}",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+            )
+            Text(
+                text = "Nombre de votes : ${movie.vote_count}",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+    }
+}
+
+@Composable
+fun autresinfos(viewModel: MainViewModel, filmId: String){
+    val movies by viewModel.movies.collectAsState()
+    val movie = movies.find { it.id == filmId.toInt() }
+    if (movie != null) {
+        Column(
+            horizontalAlignment = AbsoluteAlignment.Left,
+            modifier = Modifier.fillMaxSize().padding(5.dp)
+        ) {
+            Text(
+                text = "Informations suplémentaires :",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Row {
+                //Pour afficher le poster en entier :
+                AsyncImage(
+                    model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
+                    contentDescription = "Movie Poster",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        //.height(200.dp)
+                        .padding(bottom = 5.dp)
+                )
+                Column {
+                    if (movie.title != movie.original_title) {
+                        Text(
+                            text = "Titre original : ${movie.original_title}",
+                            fontSize = 16.sp,
+                            fontStyle = FontStyle.Italic,
+                            modifier = Modifier.padding(5.dp)
+                        )
+                        Text(
+                            text = "Langue originale : ${movie.original_language}",
+                            fontSize = 16.sp,
+                            fontStyle = FontStyle.Italic,
+                            modifier = Modifier.padding(5.dp)
+                        )
+                    }
+                    Text(
+                        text = "Id : ${movie.id}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier.padding(5.dp)
+                    )
+                }
+            }
+        }
     }
 }

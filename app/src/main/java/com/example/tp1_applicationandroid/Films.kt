@@ -20,7 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
@@ -31,109 +33,14 @@ fun Films (viewModel: MainViewModel, navController: NavHostController) {
     LaunchedEffect(Unit) {
         viewModel.getMovies()
     }
-    //La fonction collectAsStateWithLifecycle permet de sortir de l'état provisoir
-    val movies by viewModel.movies.collectAsStateWithLifecycle()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    when (windowSizeClass.windowWidthSizeClass) {
-        WindowWidthSizeClass.COMPACT -> {
-            LazyVerticalGrid(
-                /*columns = when (windowSizeClass.windowWidthSizeClass) {
-                    WindowWidthSizeClass.COMPACT -> GridCells.Fixed(2)
-                    WindowWidthSizeClass.MEDIUM -> GridCells.Fixed(3)
-                    WindowWidthSizeClass.EXPANDED -> GridCells.Fixed(4)
-                    else -> GridCells.Fixed(2)
-                },*/
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.padding(5.dp)
-            ) {
-                items(movies.size) { index ->
-                    val movie = movies[index]
-                    Card(
-                        modifier = Modifier.padding(10.dp).clickable {
-                            navController.navigate("FilmDetails/${movie.id}")
-                        },
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray
-                        ),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 8.dp,
-                            pressedElevation = 12.dp,
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(5.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
-                                contentDescription = "poster",
-                                alignment = Alignment.Center,
-                            )
-                            Text(
-                                movie.title,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                movie.release_date,
-                                fontStyle = FontStyle.Italic,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                }
-            }
-        }
+    val isPortrait = windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
 
-
-
-        else -> {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
-                modifier = Modifier.padding(10.dp)
-            ) {
-                items(movies.size) { index ->
-                    val movie = movies[index]
-                    Card(
-                        modifier = Modifier.padding(10.dp).clickable {
-                            navController.navigate("FilmDetails/${movie.id}")
-                        },
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray
-                        ),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 8.dp,
-                            pressedElevation = 12.dp,
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(5.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
-                                contentDescription = "poster"
-                            )
-                            Text(
-                                movie.title,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                movie.release_date,
-                                fontStyle = FontStyle.Italic,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                }
-            }
-
-        }
+    //On vérifie si on est en mode portrait ou paysage
+    if (isPortrait){
+        filmPortait(navController, viewModel)
+    } else {
+        filmPaysage(navController, viewModel)
     }
     //Ancienne fonction qui mettait tous les films en 1 colonne
     /*LazyColumn{
@@ -149,4 +56,106 @@ fun Films (viewModel: MainViewModel, navController: NavHostController) {
             }
         }
     }*/
+}
+
+@Composable
+fun filmPortait (navController: NavController, viewModel: MainViewModel){
+    //La fonction collectAsStateWithLifecycle permet de sortir de l'état provisoir
+    val movies by viewModel.movies.collectAsStateWithLifecycle()
+    LazyVerticalGrid(
+        /*columns = when (windowSizeClass.windowWidthSizeClass) {
+            WindowWidthSizeClass.COMPACT -> GridCells.Fixed(2)
+            WindowWidthSizeClass.MEDIUM -> GridCells.Fixed(3)
+            WindowWidthSizeClass.EXPANDED -> GridCells.Fixed(4)
+            else -> GridCells.Fixed(2)
+        },*/
+        columns = GridCells.Fixed(2),
+        modifier = Modifier.padding(5.dp)
+    ) {
+        items(movies.size) { index ->
+            val movie = movies[index]
+            Card(
+                modifier = Modifier.padding(10.dp).clickable {
+                    navController.navigate("FilmDetails/${movie.id}")
+                },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.LightGray
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 8.dp,
+                    pressedElevation = 12.dp,
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(5.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AsyncImage(
+                        model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
+                        contentDescription = "poster",
+                        alignment = Alignment.Center,
+                    )
+                    Text(
+                        movie.title,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        movie.release_date,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun filmPaysage(navController: NavController, viewModel: MainViewModel) {
+    val movies by viewModel.movies.collectAsStateWithLifecycle()
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(4),
+        modifier = Modifier.padding(5.dp)
+    ) {
+        items(movies.size) { index ->
+            val movie = movies[index]
+            Card(
+                modifier = Modifier.padding(10.dp).clickable {
+                    navController.navigate("FilmDetails/${movie.id}")
+                },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.LightGray
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 8.dp,
+                    pressedElevation = 12.dp,
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(5.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AsyncImage(
+                        model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
+                        contentDescription = "poster"
+                    )
+                    Text(
+                        movie.title,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        movie.release_date,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
 }

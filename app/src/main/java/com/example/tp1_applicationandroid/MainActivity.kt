@@ -86,53 +86,7 @@ class MainActivity : ComponentActivity() {
                             if (isLandscape) {
                                 Row {
                                     TopLeftFloatingActionButton(navController)
-                                    FloatingActionButton(
-                                        onClick = { showSearchBar = !showSearchBar },
-                                        containerColor = Color.LightGray,
-                                        modifier = Modifier.padding(5.dp)
-                                    ) {
-                                        if (showSearchBar) {
-                                            TextField(
-                                                value = viewmodel.query,
-                                                onValueChange = { viewmodel.query = it },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(10.dp),
-                                                placeholder = { Text("Entrez votre recherche...") },
-                                                singleLine = true,
-                                                keyboardOptions = KeyboardOptions.Default.copy(
-                                                    imeAction = ImeAction.Search
-                                                ),
-                                                keyboardActions = KeyboardActions(
-                                                    onSearch = {
-                                                        showSearchBar = false
-                                                        viewmodel.searchMovies()
-                                                    }
-                                                ),
-                                                trailingIcon = {
-                                                    TextButton(
-                                                        onClick = {
-                                                            showSearchBar = false
-                                                            viewmodel.searchMovies()
-                                                            navController.navigate("search/${viewmodel.query}")
-                                                        },
-                                                        colors = ButtonDefaults.textButtonColors(
-                                                            Color.White
-                                                        ),
-                                                        modifier = Modifier.padding(5.dp)
-                                                    ) {
-                                                        Text(text = "Rechercher")
-                                                    }
-                                                }
-                                            )
-                                        } else {
-                                            Icon(
-                                                painter = painterResource(R.drawable.baseline_search_24),
-                                                contentDescription = "recherche",
-                                                tint = Color.DarkGray
-                                            )
-                                        }
-                                    }
+                                    SearchFloatingButton(navController, viewmodel)
                                 }
 
                         } else {
@@ -255,9 +209,9 @@ class MainActivity : ComponentActivity() {
                                             selected = currentDestination?.hasRoute<ActeursDestination>() == true,
                                             onClick = { navController.navigate(ActeursDestination()) })
                                     }
-                                }
+                                //}
                             }
-                        //}
+                        }
                     }
                 )
                 { innerPadding ->
@@ -381,6 +335,59 @@ fun TopLeftFloatingActionButton(navController: NavController){
 }
 
 @Composable
+fun SearchFloatingButton(navController: NavController, viewmodel: MainViewModel){
+    var showSearchBar by remember { mutableStateOf(false) }
+    FloatingActionButton(
+        onClick = { showSearchBar = !showSearchBar },
+        containerColor = Color.LightGray,
+        modifier = Modifier.padding(5.dp)
+    ) {
+        if (showSearchBar) {
+            TextField(
+                value = viewmodel.query,
+                onValueChange = { viewmodel.query = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                placeholder = { Text("Entrez votre recherche...") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        showSearchBar = false
+                        viewmodel.searchMovies()
+                    }
+                ),
+                trailingIcon = {
+                    TextButton(
+                        onClick = {
+                            showSearchBar = false
+                            viewmodel.searchMovies()
+                            navController.navigate("search/${viewmodel.query}")
+                        },
+                        colors = ButtonDefaults.textButtonColors(
+                            Color.White
+                        ),
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        Text(text = "Rechercher")
+                    }
+                }
+            )
+        } else {
+            Icon(
+                painter = painterResource(R.drawable.baseline_search_24),
+                contentDescription = "recherche",
+                tint = Color.DarkGray
+            )
+        }
+    }
+
+}
+
+@Composable
 fun CustomTopBar(navController: NavController){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -388,55 +395,54 @@ fun CustomTopBar(navController: NavController){
     var showSearchBar by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
 
-    if(!isProfilDestination){
+    if(!isProfilDestination) {
         Column(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxHeight()
                 .width(72.dp)
-        ){
-                TextButton(
-                    onClick = { navController.navigate(ProfilDestination()) },
-                    colors = ButtonDefaults.textButtonColors(Color.DarkGray)
-                ) {
-                    Text(
-                        "Profil",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        color = Color.LightGray
-                    )
-                }
-                Icon(
-                    painter = painterResource(R.drawable.baseline_search_24),
-                    contentDescription = "recherche",
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clickable { showSearchBar = true },
-                    tint = Color.DarkGray
+        ) {
+            TextButton(
+                onClick = { navController.navigate(ProfilDestination()) },
+                colors = ButtonDefaults.textButtonColors(Color.DarkGray)
+            ) {
+                Text(
+                    "Profil",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = Color.LightGray
                 )
             }
-            if (showSearchBar){
-                TextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    placeholder = { Text("Entrez votre recherche...") },
-                    singleLine = true,
-                    trailingIcon = {
-                        TextButton(
-                            onClick = {
-                                showSearchBar = false
-                                navController.navigate("search/$query")
-                            },
-                            colors = ButtonDefaults.textButtonColors(Color.White)
-                        ) {
-                            Text(text="Rechercher")
-                        }
+            Icon(
+                painter = painterResource(R.drawable.baseline_search_24),
+                contentDescription = "recherche",
+                modifier = Modifier
+                    .size(30.dp)
+                    .clickable { showSearchBar = true },
+                tint = Color.DarkGray
+            )
+        }
+        if (showSearchBar) {
+            TextField(
+                value = query,
+                onValueChange = { query = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                placeholder = { Text("Entrez votre recherche...") },
+                singleLine = true,
+                trailingIcon = {
+                    TextButton(
+                        onClick = {
+                            showSearchBar = false
+                            navController.navigate("search/$query")
+                        },
+                        colors = ButtonDefaults.textButtonColors(Color.White)
+                    ) {
+                        Text(text = "Rechercher")
                     }
-                )
-            }
+                }
+            )
         }
     }
-//}
+}
