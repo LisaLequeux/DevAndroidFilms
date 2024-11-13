@@ -61,6 +61,7 @@ import androidx.compose.material3.FloatingActionButton
 @Serializable class FilmsDestination
 @Serializable class SeriesDestination
 @Serializable class ActeursDestination
+@Serializable class CollectionDestination
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("RestrictedApi")
@@ -207,7 +208,21 @@ class MainActivity : ComponentActivity() {
                                             },
                                             label = { Text("Acteurs") },
                                             selected = currentDestination?.hasRoute<ActeursDestination>() == true,
-                                            onClick = { navController.navigate(ActeursDestination()) })
+                                            onClick = { navController.navigate(ActeursDestination()) }
+                                        )
+                                        NavigationBarItem(
+                                            icon = {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.baseline_photo_library_24),
+                                                    contentDescription = "collection",
+                                                    Modifier.size(20.dp),
+                                                    tint = Color.DarkGray
+                                                )
+                                            },
+                                            label = { Text("Collection") },
+                                            selected = currentDestination?.hasRoute<CollectionDestination>() == true,
+                                            onClick = { navController.navigate(CollectionDestination()) }
+                                        )
                                     }
                                 //}
                             }
@@ -237,6 +252,7 @@ class MainActivity : ComponentActivity() {
                             composable<FilmsDestination> { Films(viewmodel, navController) }
                             composable<SeriesDestination> { Series(viewmodel, navController) }
                             composable<ActeursDestination> { Acteurs(viewmodel, navController) }
+                            composable<CollectionDestination>{ Collection(viewmodel) }
                             composable("FilmDetails/{filmId}") { backStackEntry ->
                                 val filmId = backStackEntry.arguments?.getString("filmId")
                                     ?: return@composable
