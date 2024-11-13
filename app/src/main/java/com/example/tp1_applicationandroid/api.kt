@@ -57,9 +57,14 @@ interface Api {
     ): Actors
 
     @GET("search/person")
-suspend fun searchActeur(
+    suspend fun searchActeur(
         @Query("api_key") api_key: String,
         @Query("query") query: String,
     ): TmdbActeursResult
 
+    @GET("search/collection")
+    suspend fun collectHorror(
+        @Query("api_key") api_key: String,
+        @Query("query") query: String,
+    ) : TmdbHorrorResult
 }

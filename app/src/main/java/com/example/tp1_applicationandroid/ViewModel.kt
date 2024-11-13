@@ -45,6 +45,7 @@ class MainViewModel : ViewModel() {
     //private val _searchMovies = MutableStateFlow<List<Movie>>(emptyList())
     //val searchMovies: StateFlow<List<Search>> = _searchMovies
 
+    val horror = MutableStateFlow<List<Horror>>(listOf())
     var query by mutableStateOf("")
 
     fun getMovies(language: String = "fr"){
@@ -131,4 +132,9 @@ class MainViewModel : ViewModel() {
     }
 
 
+    fun collectionHorror(){
+        viewModelScope.launch {
+            horror.value = api.collectHorror(api_key, query).results
+        }
+    }
 }
